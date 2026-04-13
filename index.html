@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--off-black:#111;--near-black:#1a1a1a;--dark-gray:#2a2a2a;
+  --mid-gray:#555;--light-gray:#999;--border:#222;--border-light:#e8e8e8;
+  --white:#fff;--off-white:#f9f8f6;--gold:#c9a84c;--gold-light:#e8d5a0;--gold-dark:#8b6914;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--black);color:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12)}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--light-gray);text-decoration:none}
+.nav-cta{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.55rem 1.4rem;border:1px solid var(--gold);color:var(--gold);background:transparent;cursor:pointer;text-decoration:none;font-family:var(--sans);transition:all 0.25s}
+.nav-cta:hover{background:var(--gold);color:var(--black)}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 70% 50%,rgba(201,168,76,0.06) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(201,168,76,0.04) 0%,transparent 60%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 80%);pointer-events:none}
+.hero-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards}
+.hero-eyebrow-line{width:32px;height:1px;background:var(--gold)}
+.hero-eyebrow-text{font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--serif);font-size:clamp(3rem,6vw,5.5rem);font-weight:400;line-height:1.05;max-width:800px;opacity:0;animation:fadeUp 0.8s 0.4s forwards}
+h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:1.05rem;font-weight:300;color:var(--light-gray);max-width:500px;line-height:1.75;margin-top:1.75rem;opacity:0;animation:fadeUp 0.8s 0.6s forwards}
+.hero-ctas{display:flex;gap:1rem;margin-top:2.5rem;opacity:0;animation:fadeUp 0.8s 0.8s forwards;flex-wrap:wrap}
+.btn-gold{padding:0.9rem 2.25rem;background:var(--gold);color:var(--black);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:var(--sans)}
+.btn-ghost{padding:0.9rem 2.25rem;background:transparent;color:var(--white);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:400;border:1px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;display:inline-block;font-family:var(--sans)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:4rem;border-top:1px solid var(--border);opacity:0;animation:fadeUp 0.8s 1s forwards;flex-wrap:wrap}
+.stat-num{font-family:var(--serif);font-size:2.2rem;font-weight:400}
+.stat-num span{color:var(--gold)}
+.stat-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--light-gray);margin-top:0.2rem}
+
+/* Problem */
+.problem{padding:8rem 4rem;background:var(--off-white);color:var(--black)}
+.section-label{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:1rem}
+.section-title{font-family:var(--serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:400;line-height:1.15;max-width:640px}
+.gold-line{width:40px;height:1px;margin:2rem 0;opacity:0.6}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-light);margin-top:3rem}
+.p-card{background:var(--off-white);padding:3rem}
+.p-tag{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem}
+.p-tag::before{content:'';display:block;width:24px;height:1px;background:var(--gold-dark)}
+.p-card h3{font-family:var(--serif);font-size:1.35rem;font-weight:400;margin-bottom:0.7rem;line-height:1.3;color:var(--black)}
+.p-card p{font-size:0.88rem;font-weight:300;color:var(--mid-gray);line-height:1.7}
+.cost-bar{background:var(--black);color:var(--white);padding:3rem;margin-top:1px;display:flex;align-items:center;gap:3rem;flex-wrap:wrap}
+.cost-num{font-family:var(--serif);font-size:5rem;font-weight:400;color:var(--gold);line-height:1}
+.cost-text h3{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:0.5rem}
+.cost-text p{font-size:0.85rem;font-weight:300;color:var(--light-gray);max-width:360px;line-height:1.65}
+
+/* Solution */
+.solution{padding:8rem 4rem;background:var(--black)}
+.sol-header{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-bottom:5rem}
+.sol-right{padding-top:3rem}
+.sol-right p{font-size:0.95rem;font-weight:300;color:var(--light-gray);line-height:1.8;margin-bottom:1.5rem}
+.sol-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.sol-card{background:var(--off-black);padding:2.5rem;position:relative;overflow:hidden}
+.sol-card::after{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--gold);transition:height 0.4s}
+.sol-card:hover{background:var(--near-black)}
+.sol-card:hover::after{height:100%}
+.sol-num{font-family:var(--mono);font-size:0.7rem;color:var(--gold);margin-bottom:1.25rem;opacity:0.7}
+.sol-card h3{font-family:var(--serif);font-size:1.2rem;font-weight:400;margin-bottom:0.75rem;line-height:1.3}
+.sol-card p{font-size:0.85rem;font-weight:300;color:var(--light-gray);line-height:1.7}
+
+/* How */
+.how{padding:8rem 4rem;background:var(--near-black);text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:5rem}
+.step{padding:2.5rem}
+.step-circle{width:64px;height:64px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem}
+.step-tag{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.step h3{font-family:var(--serif);font-size:1.5rem;font-weight:400;margin-bottom:0.75rem}
+.step p{font-size:0.85rem;font-weight:300;color:var(--light-gray);line-height:1.7;max-width:240px;margin:0 auto}
+
+/* Cases */
+.cases{padding:8rem 4rem;background:var(--off-white);color:var(--black)}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3.5rem}
+.case-card{background:var(--white);border:1px solid var(--border-light);padding:2rem;transition:border-color 0.3s,transform 0.3s}
+.case-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.case-badge{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-dark);background:rgba(201,168,76,0.1);padding:0.3rem 0.7rem;display:inline-block;margin-bottom:1.25rem}
+.case-card h3{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--black);margin-bottom:0.6rem;line-height:1.3}
+.case-card p{font-size:0.82rem;font-weight:300;color:var(--mid-gray);line-height:1.65}
+.case-result{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border-light);font-size:0.75rem;color:var(--gold-dark);font-weight:500}
+
+/* Results */
+.results{padding:8rem 4rem;background:var(--black)}
+.results-inner{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.metric{background:var(--off-black);padding:2.5rem}
+.metric-num{font-family:var(--serif);font-size:3.2rem;font-weight:400;color:var(--gold);line-height:1}
+.metric-label{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--light-gray);margin-top:0.5rem}
+.quote{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--light-gray);line-height:1.7;margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
+.cite{font-family:var(--sans);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid-gray);margin-top:1rem}
+
+/* CTA band */
+.cta-band{padding:6rem 4rem;background:var(--gold);text-align:center}
+.cta-band h2{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;color:var(--black);line-height:1.15;max-width:640px;margin:0 auto}
+.cta-band h2 em{font-style:italic}
+.cta-band p{font-size:0.95rem;font-weight:300;color:var(--dark-gray);margin:1.5rem auto 0;max-width:480px;line-height:1.65}
+.cta-btns{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;flex-wrap:wrap}
+.btn-black{padding:0.9rem 2.25rem;background:var(--black);color:var(--white);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:var(--sans)}
+.btn-outline-black{padding:0.9rem 2.25rem;background:transparent;color:var(--black);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:400;border:1px solid rgba(0,0,0,0.35);cursor:pointer;text-decoration:none;display:inline-block;font-family:var(--sans)}
+
+/* Contact */
+.contact{padding:8rem 4rem;background:var(--off-black)}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:6rem}
+.contact-detail-item{display:flex;flex-direction:column;gap:0.2rem;padding:1.25rem 0;border-bottom:1px solid var(--border)}
+.d-label{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+.d-val{font-size:0.88rem;color:var(--white);font-weight:300}
+.calendly-box{background:var(--border);padding:1.75rem;margin-top:1.5rem;border-left:2px solid var(--gold);font-size:0.82rem;color:var(--light-gray);line-height:1.5}
+form{display:flex;flex-direction:column;gap:1.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+label{font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--light-gray);display:block;margin-bottom:0.5rem}
+input,textarea{background:var(--dark-gray);border:1px solid var(--border);color:var(--white);padding:0.85rem 1rem;font-family:var(--sans);font-size:0.88rem;font-weight:300;outline:none;transition:border-color 0.25s;width:100%}
+input:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:120px}
+.form-submit{padding:1rem 2rem;background:var(--gold);color:var(--black);font-family:var(--sans);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;align-self:flex-start}
+.form-note{font-size:0.72rem;color:var(--mid-gray)}
+
+/* Footer */
+footer{background:var(--black);padding:3rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);flex-wrap:wrap;gap:1rem}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid-gray);text-decoration:none}
+.footer-copy{font-size:0.72rem;color:var(--mid-gray)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}.d4{transition-delay:0.4s}
+
+@media(max-width:860px){
+  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  .hero,.problem,.solution,.how,.cases,.results,.cta-band,.contact{padding:4rem 1.5rem}
+  h1{font-size:2.6rem}
+  .hero-stats{gap:1.5rem}
+  .problem-grid,.sol-grid,.steps,.cases-grid,.results-inner,.contact-inner,.sol-header{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr 1fr}
+  footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <!-- LOGO: compact horizontal -->
+  <a href="#home" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <svg width="36" height="36" viewBox="-34 -34 68 68" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(35)"/>
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(-35)"/>
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(90)"/>
+      <circle cx="0" cy="-28" r="3" fill="#c9a84c"/>
+      <circle cx="0" cy="28" r="3" fill="#c9a84c"/>
+      <circle cx="-24" cy="0" r="2.5" fill="#c9a84c" opacity="0.7"/>
+      <circle cx="24" cy="0" r="2.5" fill="#c9a84c" opacity="0.7"/>
+      <circle cx="0" cy="0" r="10" fill="#0a0a0a" stroke="#c9a84c" stroke-width="0.9"/>
+      <path d="M0,0 L0,-7.5 A7.5,7.5 0 0,1 6.5,3.75 Z" fill="#c9a84c" opacity="0.95"/>
+      <path d="M0,0 L6.5,3.75 A7.5,7.5 0 0,1 -6.5,3.75 Z" fill="#c9a84c" opacity="0.5"/>
+      <path d="M0,0 L-6.5,3.75 A7.5,7.5 0 0,1 0,-7.5 Z" fill="#c9a84c" opacity="0.25"/>
+      <circle cx="0" cy="0" r="1.8" fill="#0a0a0a"/>
+    </svg>
+    <div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:1rem;font-weight:400;color:#fff;line-height:1.1;letter-spacing:0.01em">Time<span style="color:#c9a84c">Saving</span> Solutions</div>
+      <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:0.6rem;letter-spacing:0.22em;color:#666;text-transform:uppercase;margin-top:1px">TSS Automation</div>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a href="#problem">The Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="nav-cta">Free Audit</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div style="position:relative;z-index:1">
+    <!-- Hero logo mark — larger, centered above headline -->
+    <div style="margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.8s 0.1s forwards">
+      <svg width="64" height="64" viewBox="-40 -40 80 80" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="0" cy="0" rx="34" ry="14" fill="none" stroke="#c9a84c" stroke-width="1.3" transform="rotate(35)" opacity="0.85"/>
+        <ellipse cx="0" cy="0" rx="34" ry="14" fill="none" stroke="#c9a84c" stroke-width="1.3" transform="rotate(-35)" opacity="0.85"/>
+        <ellipse cx="0" cy="0" rx="34" ry="14" fill="none" stroke="#c9a84c" stroke-width="1.3" transform="rotate(90)" opacity="0.85"/>
+        <circle cx="0" cy="-34" r="4" fill="#c9a84c"/>
+        <circle cx="0" cy="34" r="4" fill="#c9a84c"/>
+        <circle cx="-29" cy="0" r="3.5" fill="#c9a84c" opacity="0.65"/>
+        <circle cx="29" cy="0" r="3.5" fill="#c9a84c" opacity="0.65"/>
+        <circle cx="0" cy="0" r="13" fill="#0a0a0a" stroke="#c9a84c" stroke-width="1"/>
+        <path d="M0,0 L0,-10 A10,10 0 0,1 8.66,5 Z" fill="#c9a84c" opacity="0.95"/>
+        <path d="M0,0 L8.66,5 A10,10 0 0,1 -8.66,5 Z" fill="#c9a84c" opacity="0.5"/>
+        <path d="M0,0 L-8.66,5 A10,10 0 0,1 0,-10 Z" fill="#c9a84c" opacity="0.25"/>
+        <circle cx="0" cy="0" r="2.5" fill="#0a0a0a"/>
+      </svg>
+    </div>
+
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">Process Automation &amp; AI Systems</span>
+    </div>
+    <h1>Your team was built<br>to think — not to<br><em>repeat</em> themselves.</h1>
+    <p class="hero-sub">We engineer bespoke automation systems that eliminate manual workflows, reduce error, and return hundreds of hours to your business every year.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-gold">Get a Free Process Audit</a>
+      <a href="#how" class="btn-ghost">See How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">12<span>hrs</span></div><div class="stat-label">Saved per employee / week</div></div>
+      <div><div class="stat-num">98<span>%</span></div><div class="stat-label">Reduction in manual errors</div></div>
+      <div><div class="stat-num">6<span>wk</span></div><div class="stat-label">Average deployment time</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROBLEM ── -->
+<section class="problem" id="problem">
+  <p class="section-label reveal" style="color:var(--gold-dark)">The Problem</p>
+  <h2 class="section-title reveal d1" style="color:var(--black)">Manual work is quietly<br>destroying your margins.</h2>
+  <div class="gold-line reveal d2" style="background:var(--gold-dark)"></div>
+  <div class="problem-grid">
+    <div class="p-card reveal"><div class="p-tag" style="color:var(--gold-dark)">Repetitive Work</div><h3>Your team re-does the same tasks every day</h3><p>Copy-paste. Re-format. Send again. Skilled people trapped in low-value loops a machine could handle in seconds.</p></div>
+    <div class="p-card reveal d1"><div class="p-tag" style="color:var(--gold-dark)">Spreadsheet Chaos</div><h3>Spreadsheets are your de facto software</h3><p>Version conflicts, broken formulas, manual refreshes. What started as a quick fix now runs your business.</p></div>
+    <div class="p-card reveal d2"><div class="p-tag" style="color:var(--gold-dark)">Human Error</div><h3>Mistakes that cost real money</h3><p>A miskeyed figure, a missed row — manual processes create compounding inaccuracies that erode trust and profit.</p></div>
+    <div class="p-card reveal d3"><div class="p-tag" style="color:var(--gold-dark)">Lost Time</div><h3>Hours consumed by process, not progress</h3><p>Every hour spent managing data is an hour not spent on strategy, growth, or serving clients.</p></div>
+  </div>
+  <div class="cost-bar reveal">
+    <div class="cost-num">$50k</div>
+    <div class="cost-text">
+      <h3>Average annual cost of manual processes<br>for a team of 10</h3>
+      <p>Before you account for the strategic opportunities missed while your people are buried in tasks that shouldn't exist.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SOLUTION ── -->
+<section class="solution" id="solution">
+  <div class="sol-header">
+    <div>
+      <p class="section-label reveal" style="color:var(--gold)">Our Solution</p>
+      <h2 class="section-title reveal d1" style="color:var(--white)">We build systems that<br>work while you <em style="color:var(--gold)">sleep.</em></h2>
+      <div class="gold-line reveal d2" style="background:var(--gold)"></div>
+    </div>
+    <div class="sol-right reveal d2">
+      <p>Time Saving Solutions designs and deploys custom automation engines tailored to your exact workflows. We don't sell software licenses. We build the system your business actually needs.</p>
+      <p>From simple task automation to complex AI-assisted pipelines — we engineer it, integrate it, and hand you back your time.</p>
+    </div>
+  </div>
+  <div class="sol-grid">
+    <div class="sol-card reveal"><div class="sol-num">01</div><h3>Custom Automation Systems</h3><p>Workflow engines built from scratch around your processes — not generic templates that require you to adapt.</p></div>
+    <div class="sol-card reveal d1"><div class="sol-num">02</div><h3>Intelligent Data Workflows</h3><p>Automated pipelines that collect, clean, transform, and deliver your data exactly where it needs to be.</p></div>
+    <div class="sol-card reveal d2"><div class="sol-num">03</div><h3>AI Integrations</h3><p>We embed LLMs and AI tools into your workflows for document processing, classification, and decision support.</p></div>
+    <div class="sol-card reveal d3"><div class="sol-num">04</div><h3>Seamless System Integration</h3><p>We plug into your existing stack — CRMs, ERPs, databases, APIs — so nothing needs to be replaced, only enhanced.</p></div>
+  </div>
+</section>
+
+<!-- ── HOW ── -->
+<section class="how" id="how">
+  <p class="section-label reveal" style="color:var(--gold);text-align:center">How It Works</p>
+  <h2 class="section-title reveal d1" style="color:var(--white);margin:0 auto;text-align:center">Three steps from<br>manual to <em style="color:var(--gold)">automatic.</em></h2>
+  <div class="steps">
+    <div class="step reveal"><div class="step-circle"><span style="font-family:var(--mono);font-size:0.85rem;color:var(--gold)">I</span></div><p class="step-tag">Analyze</p><h3>Diagnose</h3><p>We map every manual process — time audits, workflow interviews, and system reviews reveal exactly where hours are lost.</p></div>
+    <div class="step reveal d1"><div class="step-circle"><span style="font-family:var(--mono);font-size:0.85rem;color:var(--gold)">II</span></div><p class="step-tag">Build</p><h3>Engineer</h3><p>Our team designs and builds your custom automation. Tested rigorously, documented completely, integrated cleanly.</p></div>
+    <div class="step reveal d2"><div class="step-circle"><span style="font-family:var(--mono);font-size:0.85rem;color:var(--gold)">III</span></div><p class="step-tag">Save Time</p><h3>Reclaim</h3><p>Deploy, monitor, and measure. We track hours saved, errors eliminated, and ROI — transparently and continuously.</p></div>
+  </div>
+</section>
+
+<!-- ── USE CASES ── -->
+<section class="cases" id="cases">
+  <p class="section-label reveal" style="color:var(--gold-dark)">Real-World Applications</p>
+  <h2 class="section-title reveal d1" style="color:var(--black)">What we've already<br>built — and proven.</h2>
+  <div class="gold-line reveal d2" style="background:var(--gold-dark)"></div>
+  <div class="cases-grid">
+    <div class="case-card reveal"><span class="case-badge">Reporting</span><h3>Automated Report Generation</h3><p>Pull live data, generate formatted outputs, deliver to stakeholders on schedule — zero manual assembly.</p><div class="case-result">→ 8 hrs/week returned to analytics team</div></div>
+    <div class="case-card reveal d1"><span class="case-badge">Data Operations</span><h3>File & Data Comparison</h3><p>Reconcile datasets, flag discrepancies, merge records automatically — replacing hours of work with seconds.</p><div class="case-result">→ 99.2% accuracy vs 94% manual baseline</div></div>
+    <div class="case-card reveal d2"><span class="case-badge">Process Management</span><h3>Workflow Approvals</h3><p>Multi-stage approval chains with routing, deadline tracking, escalation logic, and full audit trails.</p><div class="case-result">→ Approval cycle time cut by 73%</div></div>
+    <div class="case-card reveal"><span class="case-badge">Integration</span><h3>Cross-System Data Sync</h3><p>Keep your CRM, ERP, spreadsheets, and databases in perfect sync — no exports, no imports, no intervention.</p><div class="case-result">→ Zero manual sync tasks per week</div></div>
+    <div class="case-card reveal d1"><span class="case-badge">AI-Powered</span><h3>Document Intelligence</h3><p>AI reads, classifies, and extracts data from contracts, invoices, and emails — routes it automatically.</p><div class="case-result">→ 3,000+ documents processed hands-free / month</div></div>
+    <div class="case-card reveal d2"><span class="case-badge">Operations</span><h3>Inventory & Fulfillment</h3><p>Trigger reorders, update stock levels, and notify teams based on real-time thresholds automatically.</p><div class="case-result">→ Stockouts reduced by 89%</div></div>
+  </div>
+</section>
+
+<!-- ── RESULTS ── -->
+<section class="results" id="results">
+  <div class="results-inner">
+    <div>
+      <p class="section-label reveal" style="color:var(--gold)">Outcomes</p>
+      <h2 class="section-title reveal d1" style="color:var(--white)">Results you can<br>measure from<br><em style="color:var(--gold)">week one.</em></h2>
+      <div class="gold-line reveal d2" style="background:var(--gold)"></div>
+      <p class="reveal d2" style="font-size:0.9rem;font-weight:300;color:var(--light-gray);line-height:1.7;max-width:400px">Every engagement is tracked against a clear baseline. You'll know exactly what you gained — not just in productivity, but in dollars.</p>
+      <div class="quote reveal d3">"Within six weeks of deployment, we recovered over 40 hours of weekly capacity. The system paid for itself in 30 days."<div class="cite">— Operations Director, Mid-Size Logistics Firm</div></div>
+    </div>
+    <div class="metrics reveal d1">
+      <div class="metric"><div class="metric-num">12+</div><div class="metric-label">Hours saved per employee, weekly</div></div>
+      <div class="metric"><div class="metric-num">98%</div><div class="metric-label">Reduction in process errors</div></div>
+      <div class="metric"><div class="metric-num">6wk</div><div class="metric-label">Time to full deployment</div></div>
+      <div class="metric"><div class="metric-num">4×</div><div class="metric-label">Average ROI within year one</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ── -->
+<section class="cta-band">
+  <h2>Stop paying people<br>to do a <em>machine's</em> job.</h2>
+  <p>Book a free process audit. We'll identify your highest-value automation opportunity at no cost — no commitment required.</p>
+  <div class="cta-btns">
+    <a href="#contact" class="btn-black">Book a Free Audit</a>
+    <a href="#contact" class="btn-outline-black">Submit a Process for Review</a>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <p class="section-label reveal" style="color:var(--gold)">Get Started</p>
+      <h2 class="section-title reveal d1" style="color:var(--white)">Let's audit<br>your first<br><em style="color:var(--gold)">process — free.</em></h2>
+      <div class="gold-line reveal d2" style="background:var(--gold)"></div>
+      <p class="reveal d2" style="font-size:0.9rem;font-weight:300;color:var(--light-gray);line-height:1.7;max-width:400px">Tell us what your team does manually. We'll identify the automation opportunity and show you what's possible — at no cost.</p>
+      <div class="reveal d3">
+        <div class="contact-detail-item"><span class="d-label">Email</span><span class="d-val">hello@timesavingsolutions.com</span></div>
+        <div class="contact-detail-item"><span class="d-label">Response Time</span><span class="d-val">Within 24 hours on business days</span></div>
+        <div class="contact-detail-item"><span class="d-label">Engagement Scope</span><span class="d-val">SMBs to mid-market, any industry</span></div>
+      </div>
+      <div class="calendly-box reveal d4"><strong style="color:var(--gold);font-weight:500;display:block;margin-bottom:0.35rem">Prefer to book directly?</strong>Schedule a 30-minute discovery call — Calendly widget loads here. Zero sales pressure, pure strategy.</div>
+    </div>
+    <div class="reveal d2">
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div><label for="fn">Full Name</label><input type="text" id="fn" placeholder="Jane Smith" required/></div>
+          <div><label for="fe">Work Email</label><input type="email" id="fe" placeholder="jane@company.com" required/></div>
+        </div>
+        <div><label for="fc">Company</label><input type="text" id="fc" placeholder="Acme Corp" required/></div>
+        <div><label for="fp">Describe a Manual Process You'd Like Automated</label><textarea id="fp" placeholder="e.g. Every Monday we manually pull data from three spreadsheets, combine them, and email a report to 12 people..." required></textarea></div>
+        <p class="form-note">No sales pitch. A genuine review and a clear recommendation.</p>
+        <button type="submit" class="form-submit">Submit for Free Review →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <!-- Footer logo -->
+  <a href="#home" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+    <svg width="28" height="28" viewBox="-34 -34 68 68" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(35)"/>
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(-35)"/>
+      <ellipse cx="0" cy="0" rx="28" ry="11" fill="none" stroke="#c9a84c" stroke-width="1.4" transform="rotate(90)"/>
+      <circle cx="0" cy="-28" r="3" fill="#c9a84c"/>
+      <circle cx="0" cy="28" r="3" fill="#c9a84c"/>
+      <circle cx="-24" cy="0" r="2.5" fill="#c9a84c" opacity="0.7"/>
+      <circle cx="24" cy="0" r="2.5" fill="#c9a84c" opacity="0.7"/>
+      <circle cx="0" cy="0" r="10" fill="#0a0a0a" stroke="#c9a84c" stroke-width="0.9"/>
+      <path d="M0,0 L0,-7.5 A7.5,7.5 0 0,1 6.5,3.75 Z" fill="#c9a84c" opacity="0.95"/>
+      <path d="M0,0 L6.5,3.75 A7.5,7.5 0 0,1 -6.5,3.75 Z" fill="#c9a84c" opacity="0.5"/>
+      <path d="M0,0 L-6.5,3.75 A7.5,7.5 0 0,1 0,-7.5 Z" fill="#c9a84c" opacity="0.25"/>
+      <circle cx="0" cy="0" r="1.8" fill="#0a0a0a"/>
+    </svg>
+    <div>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:0.9rem;color:#fff">Time<span style="color:#c9a84c">Saving</span> Solutions</div>
+      <div style="font-family:'DM Sans',system-ui,sans-serif;font-size:0.58rem;letter-spacing:0.2em;color:#444;text-transform:uppercase">TSS Automation</div>
+    </div>
+  </a>
+  <div class="footer-links">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 Time Saving Solutions. All rights reserved.</div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+function handleSubmit(e){e.preventDefault();e.target.innerHTML='<div style="padding:3rem;border:1px solid #c9a84c;text-align:center"><p style="font-family:Playfair Display,serif;font-size:1.5rem;color:#c9a84c;margin-bottom:1rem">Received.</p><p style="font-size:0.88rem;font-weight:300;color:#999;line-height:1.7">We\'ll review your process and respond within 24 hours with a clear recommendation.</p></div>'}
+</script>
+</body>
+</html>
